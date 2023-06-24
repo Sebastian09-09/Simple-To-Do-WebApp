@@ -22,11 +22,12 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        
+        #New Object of class Auth
         handler = Auth(username)
         cpass = handler.getPassword()
         del handler
         if password == cpass:
+            #Storing Username in Session if password matches
             session['loggedIn'] = True 
             session['username'] = username
             return redirect(url_for('index'))
@@ -48,11 +49,12 @@ def signup():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        
+        #New Object of class Auth
         handler = Auth(username)
         temp = handler.setPassword(password)
         del handler
         if temp:
+            #signup was successful
             return redirect(url_for('login'))
         else:
             flash(f"Username \"{username}\" already exists!!")
@@ -62,7 +64,6 @@ def signup():
 
 
 #API
-
 @app.route('/api/todo/create', methods=["POST"])
 def create():
     task = request.form["task"]
@@ -77,7 +78,6 @@ def update():
     data = request.form["update"]
     status = data.split(" ")[-1]
     task = data.rstrip(status).strip()
-    print(task)
     db = Data(session['username'])
     db.updUserData(task, status)
     del db
@@ -93,4 +93,4 @@ def delete():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
